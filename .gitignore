@@ -1,1 +1,5 @@
 src/build
+
+
+# bazel related files
+bazel-*
