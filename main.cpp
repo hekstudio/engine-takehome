@@ -1,5 +1,7 @@
 #include <iostream>
-#include <stdio.h>
+#include <boost/program_options.hpp>
+
+namespace po = boost::program_options;
 
 int main() {
   std::cerr << "====== Match Engine =====" << std::endl;
