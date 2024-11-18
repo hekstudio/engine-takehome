@@ -1,5 +1,14 @@
 src/build
 
+# IDE files
+.vscode
+.idea
 
 # bazel related files
 bazel-*
+
+# Ignore all executables
+*.exe
+*.out
+*.bin
+main
