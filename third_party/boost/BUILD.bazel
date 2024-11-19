@@ -1,0 +1,18 @@
+cc_library(
+    name = "program_options",
+    srcs = glob([
+        "libs/program_options/src/*.cpp",
+
+    ]),
+    hdrs = glob([
+       "boost/**/*.hpp",
+       "boost/**/*.ipp",
+       "libs/**/*.ipp",  # Include all .ipp files from libs
+       "libs/program_options/src/*.hpp",
+       "libs/detail/**/*.hpp",
+       "libs/detail/**/*.ipp",
+    ]),
+    includes = ["."],  # This is important - changed from "boost" to "."
+    copts = ["-fexceptions", "-std=c++17"],  # Often needed for Boost
+    visibility = ["//visibility:public"],
+)
