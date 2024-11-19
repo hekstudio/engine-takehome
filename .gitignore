@@ -12,3 +12,6 @@ bazel-*
 *.out
 *.bin
 main
+
+# lock files
+*.lock
