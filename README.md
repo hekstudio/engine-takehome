@@ -107,3 +107,37 @@ zod42 SELL BTCUSD 2 10001
 11431 BUY ETHUSD 4 175
 45691 BUY ETHUSD 3 180
 ```
+
+
+
+---
+
+
+## Pre-requisites
+
+### Development machine
+
+- Macbook (apple silicon)
+
+### Bazel
+
+Bazel is used to build and run the application. Install bazel using brew
+
+```bash
+brew install bazel
+```
+
+
+## Run the application
+
+run the following command to start the application.
+
+```bash
+bazel run main -- --start
+```
+
+run the following command to start the module test.
+
+```bash
+bazel test test_order
+```
