@@ -117,3 +117,12 @@ void Order::printOrder() const {
               << quantity << " "
               << price << std::endl;
 }
+
+void Order::printOrderDetails() const {
+    std::cout << orderID << " "
+              << side << " "
+              << instrument << " "
+              << quantity << " "
+              << price << " "
+              << status.getStatusString() << std::endl;
+}

@@ -46,6 +46,8 @@ public:
     bool isSell() const { return side == OrderUtils::SELL; }
     // print orders
     void printOrder() const;
+    // print order details (including status)
+    void printOrderDetails() const;
 
 private:
     bool _isValid;
