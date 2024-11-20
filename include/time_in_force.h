@@ -1,5 +1,5 @@
 //
-// Created by Hongchuan JIANG on 17/11/24.
+// Created by JIANG on 17/11/24.
 //
 
 #ifndef ENGINE_TAKEHOME_TIME_IN_FORCE_H
@@ -17,12 +17,5 @@ enum class TimeInForce {
     OPG,  // At the Opening
     CLS   // At the Close
 };
-
-namespace TimeInForceUtils {
-    std::string toString(TimeInForce tif);
-    TimeInForce toTimeInForce(const std::string& str);
-    int toInt(TimeInForce tif);
-    TimeInForce toTimeInForce(int value);
-}
 
 #endif //ENGINE_TAKEHOME_TIME_IN_FORCE_H
