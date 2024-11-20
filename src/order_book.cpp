@@ -111,27 +111,47 @@ bool OrderBook::cancelOrder(const std::string& orderID) {
     if (_orders.find(orderID) == _orders.end()) {
         return false;
     }
-    // order exists, find if it's in buy orders or sell orders
-    auto target_order = _orders.at(orderID);
-    if (target_order.isBuy()) {
-        // buy order
-        // use price to find the order
-        _buyOrders[target_order.price].erase(
-                std::remove(_buyOrders[target_order.price].begin(),
-                _buyOrders[target_order.price].end(),
-                orderID),
-                 _buyOrders[target_order.price].end());
-    } else {
-        // sell order
-        // use price to find the order
-        _sellOrders[target_order.price].erase(
-                std::remove(_sellOrders[target_order.price].begin(),
-                _sellOrders[target_order.price].end(),
-                orderID),
-                 _sellOrders[target_order.price].end());
+    // check if order is being executed
+    if (!_orders.at(orderID).status.isNew()) {
+        return false;
     }
-    // last but if not least, remove the order from the orders map
-    _orders.erase(orderID);
+    // order exists, find if it's in buy orders or sell orders
+    Order target_order = _orders.at(orderID);
+    // use a pointer to point to the correct order map
+    std::map<double, std::vector<std::string> >* orderMapPtr;
+    if (target_order.isBuy()) {
+        orderMapPtr = &_buyOrders;
+    } else {
+        orderMapPtr = &_sellOrders;
+    }
+    // use price to find the order
+    orderMapPtr->at(target_order.price).erase(
+            std::remove(orderMapPtr->at(target_order.price).begin(),
+                        orderMapPtr->at(target_order.price).end(),
+                        orderID),
+            orderMapPtr->at(target_order.price).end());
+    // last but if not least, mark the order as canceled
+    _orders.at(orderID).status.SetCanceled();
+    return true;
+}
+
+Order& OrderBook::getOrderByID(const std::string& orderID) {
+    return _orders.at(orderID);
+}
+
+
+bool OrderBook::modifyOrder(const Order &order) {
+    // check if order exists
+    if (_orders.find(order.orderID) == _orders.end()) {
+        return false;
+    }
+    // check status of the order
+    // if order is being executed, it cannot be modified
+    if (!_orders.at(order.orderID).status.isNew()) {
+        return false;
+    }
+    // modify the order directly
+    _orders.at(order.orderID) = order;
     return true;
 }
 
@@ -140,33 +160,23 @@ void OrderBook::removeOrderByID(const std::string &orderID) {
     if (_orders.find(orderID) == _orders.end()) {
         return;
     }
-    // check if it's in buy orders or sell orders
+    // use a pointer to point to the correct order map
+    std::map<double, std::vector<std::string> >* orderMapPtr;
     if (getOrderByID(orderID).isBuy()) {
-        // buy order
-        // use price to find the order
-        _buyOrders[getOrderByID(orderID).price].erase(
-                std::remove(_buyOrders[getOrderByID(orderID).price].begin(),
-                            _buyOrders[getOrderByID(orderID).price].end(),
-                            orderID),
-                _buyOrders[getOrderByID(orderID).price].end());
-        // check if that order is empty for this price
-        if (_buyOrders[getOrderByID(orderID).price].empty()) {
-            // remove the price key if the order is empty
-            _buyOrders.erase(getOrderByID(orderID).price);
-        }
+        orderMapPtr = &_buyOrders;
     } else {
-        // sell order
-        // use price to find the order
-        _sellOrders[getOrderByID(orderID).price].erase(
-                std::remove(_sellOrders[getOrderByID(orderID).price].begin(),
-                            _sellOrders[getOrderByID(orderID).price].end(),
-                            orderID),
-                _sellOrders[getOrderByID(orderID).price].end());
-        // check if that order is empty for this price
-        if (_sellOrders[getOrderByID(orderID).price].empty()) {
-            // remove the price key if the order is empty
-            _sellOrders.erase(getOrderByID(orderID).price);
-        }
+        orderMapPtr = &_sellOrders;
+    }
+    // use price to find the order and remove the order
+    orderMapPtr->at(getOrderByID(orderID).price).erase(
+            std::remove(orderMapPtr->at(getOrderByID(orderID).price).begin(),
+                        orderMapPtr->at(getOrderByID(orderID).price).end(),
+                        orderID),
+            orderMapPtr->at(getOrderByID(orderID).price).end());
+    // check if that order is empty for this price
+    if (orderMapPtr->at(getOrderByID(orderID).price).empty()) {
+        // remove the price key if the order is empty
+        orderMapPtr->erase(getOrderByID(orderID).price);
     }
 }
 
@@ -195,7 +205,14 @@ void OrderBook::printSellOrders() const {
 }
 
 void OrderBook::printOrderBook() const {
+    // print both buy orders and sell orders
     printSellOrders();
     printBuyOrders();
+}
+
+void OrderBook::printAllOrders() const {
+    for (const auto& order : _orders) {
+        order.second.printOrderDetails();
+    }
 }
 

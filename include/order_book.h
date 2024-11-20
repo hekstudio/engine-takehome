@@ -1,5 +1,5 @@
 //
-// Created by Hongchuan JIANG on 18/11/24.
+// Created by JIANG on 18/11/24.
 //
 
 #ifndef ENGINE_TAKEHOME_ORDER_BOOK_H
@@ -13,7 +13,7 @@
 
 class OrderBook {
 public:
-    OrderBook(const std::string& symbol);
+    explicit OrderBook(const std::string& symbol); // OrderBook needs a symbol for constructor
     ~OrderBook();
 
     void addOrder(const Order& order);
@@ -24,17 +24,18 @@ public:
     void printTrades() const;
 
     void removeOrderByID(const std::string& orderID); // remove from buy orders or sell orders
-    Order& getOrderByID(const std::string& orderID) { return _orders.at(orderID); }
+    Order& getOrderByID(const std::string& orderID);  // caller should check if the order exists
 
     void printBuyOrders() const;
     void printSellOrders() const;
     void printOrderBook() const;
+    void printAllOrders() const;
 private:
     std::string _symbol;
-    std::map<double, std::vector<std::string> >  _buyOrders;   // keep all buy orders (price, orderID[])
+    std::map<double, std::vector<std::string> >  _buyOrders;  // keep all buy orders (price, orderID[])
     std::map<double, std::vector<std::string> > _sellOrders;  // keep all sell orders (price, orderID[])
-    std::map<std::string, Order> _orders;               // keep all orders
-    std::vector<Trade> _trades;                         // keep all trades
+    std::map<std::string, Order> _orders;                     // keep all orders (orderID, Order)
+    std::vector<Trade> _trades;                               // keep all trades (Trade)
 };
 
 #endif //ENGINE_TAKEHOME_ORDER_BOOK_H
