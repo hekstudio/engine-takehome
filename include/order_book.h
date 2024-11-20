@@ -30,6 +30,10 @@ public:
     void printSellOrders() const;
     void printOrderBook() const;
     void printAllOrders() const;
+
+    int getBuyOrdersSize() const { return _buyOrders.size(); }
+    int getSellOrdersSize() const { return _sellOrders.size(); }
+    int getOrdersSize() const { return _orders.size(); }
 private:
     std::string _symbol;
     std::map<double, std::vector<std::string> >  _buyOrders;  // keep all buy orders (price, orderID[])
