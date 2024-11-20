@@ -1,5 +1,5 @@
 //
-// Created by Hongchuan JIANG on 19/11/24.
+// Created by JIANG on 19/11/24.
 //
 
 #ifndef ENGINE_TAKEHOME_ORDER_MANAGER_H
