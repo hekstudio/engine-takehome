@@ -13,7 +13,6 @@ enum class OrderStatus {
     REJECTED    // Rejected
 };
 
-
 class OrderStatusManager {
 public:
     OrderStatusManager() {
@@ -45,6 +44,24 @@ public:
     }
     bool isRejected() const {
         return _status == OrderStatus::REJECTED;
+    }
+    OrderStatus getStatus() const {
+        return _status;
+    }
+    std::string getStatusString() const {
+        if (_status == OrderStatus::NEW) {
+            return "NEW";
+        } else if (_status == OrderStatus::PARTIAL) {
+            return "PARTIAL";
+        } else if (_status == OrderStatus::FILLED) {
+            return "FILLED";
+        } else if (_status == OrderStatus::CANCELED) {
+            return "CANCELED";
+        } else if (_status == OrderStatus::REJECTED) {
+            return "REJECTED";
+        } else {
+            return "UNKNOWN";
+        }
     }
 
 private:
