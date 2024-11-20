@@ -43,10 +43,31 @@ void OrderManager::readFromInputFile (const std::string& filePath) {
     }
 
     // optional print all orders with status
-    /*
+
     for (const auto& orderBook : _orderBooks) {
         orderBook.second.printAllOrders();
     }
-     */
 
+}
+
+unsigned long OrderManager::getOrderSizeBySymbol(const std::string& symbol) const {
+    if (_orderBooks.find(symbol) == _orderBooks.end()) {
+        return 0;
+    }
+    return _orderBooks.at(symbol).getOrdersSize();
+}
+
+std::vector<std::string> OrderManager::getSymbols() const {
+    std::vector<std::string> symbols;
+    for (const auto& orderBook : _orderBooks) {
+        symbols.push_back(orderBook.first);
+    }
+    return symbols;
+}
+
+std::optional<OrderBook> OrderManager::OrderManager::getOrderBookBySymbol(const std::string& symbol) const {
+    if (_orderBooks.find(symbol) == _orderBooks.end()) {
+        return std::nullopt;
+    }
+    return _orderBooks.at(symbol);
 }
