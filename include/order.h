@@ -17,7 +17,7 @@ public:
     // constructor using parameters
     Order(std::string orderID, std::string side, std::string instrument, double quantity, double price);
     // constructor using string line
-    Order(std::string& lineString, const bool& printOrder = false);
+    explicit Order(std::string& lineString, const bool& printOrder = false);
 
     std::string orderID;              // order ID, alphanumeric
     std::string side;                 // BUY or SELL
@@ -25,7 +25,7 @@ public:
     std::string timeInForce;          // time in force
     double quantity;                  // quantity
     double price;                     // price
-    OrderStatusManager status;               // order status (NEW, PARTIAL, FILLED, CANCELED, REJECTED)
+    OrderStatusManager status;        // order status (NEW, PARTIAL, FILLED, CANCELED, REJECTED)
 
     // check if the order is valid
     bool isValid() const { return _isValid; }
