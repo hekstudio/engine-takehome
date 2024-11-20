@@ -1,0 +1,112 @@
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
+string_flag(
+    name = "clang_format",
+    build_setting_default = "clang-format",
+)
+
+genrule(
+    name = "format",
+    srcs = glob(["src/*.cpp", "include/*.h"]),
+    outs = [],
+    cmd = "$(CLANG_FORMAT) -i $(SRCS)",
+    tools = [":clang_format"],
+)
+
+
+# ======================================
+# libraries
+# ======================================
+cc_library(
+    name = "lib_order_status",
+    hdrs = ["include/order_status.h"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    copts = ["-std=c++17"],
+)
+
+cc_library(
+    name = "lib_trade",
+    hdrs = ["include/trade.h"],
+    srcs = ["src/trade.cpp"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    copts = ["-std=c++17"],
+)
+
+cc_library(
+    name = "lib_order",
+    srcs = ["src/order.cpp"],
+    hdrs = ["include/order.h"],
+    includes = ["include"],
+    deps = ["lib_order_status"],
+    visibility = ["//visibility:public"],
+    copts = ["-std=c++17"],
+)
+
+cc_library(
+    name = "lib_order_book",
+    srcs = ["src/order_book.cpp"],
+    hdrs = ["include/order_book.h"],
+    deps = [
+        "lib_order",
+        "lib_trade",],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    copts = ["-std=c++17"],
+)
+
+cc_library(
+    name = "lib_order_manager",
+    srcs = ["src/order_manager.cpp"],
+    hdrs = ["include/order_manager.h"],
+    deps = ["lib_order_book"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    copts = ["-std=c++17"],
+)
+
+
+
+
+# ======================================
+# tests
+# ======================================
+cc_test(
+    name = "test_order",
+    srcs = ["tests/test_order.cpp"],
+    deps = [
+        "lib_order",
+        "@com_google_googletest//:gtest_main",  # Add if you're using Google Test
+    ],
+    copts = ["-std=c++17"],
+)
+
+cc_test(
+    name = "test_order_book",
+    srcs = ["tests/test_order_book.cpp"],
+    deps = [
+        "lib_order_manager",
+        "@com_google_googletest//:gtest_main",  # Add if you're using Google Test
+    ],
+    data = [
+        "tests/test_input_01.txt", # random orders
+        "tests/test_input_02.txt", # orders that won't be matched
+        "tests/test_input_03.txt", # orders will be traded completely
+        ],  # Include the input file
+    copts = ["-std=c++17"],
+)
+
+
+
+# ======================================
+# executables
+# ======================================
+cc_binary(
+    name = "main",
+    srcs = ["main.cpp"],
+    deps = ["@boost//:program_options",
+            "lib_order_manager"],
+    copts = ["-std=c++17"],
+    data = ["tests/sample_input.txt"],  # Include the input file
+)
