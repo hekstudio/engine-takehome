@@ -44,9 +44,11 @@ void OrderManager::readFromInputFile (const std::string& filePath) {
 
     // optional print all orders with status
 
+    /*
     for (const auto& orderBook : _orderBooks) {
         orderBook.second.printAllOrders();
     }
+     */
 
 }
 
