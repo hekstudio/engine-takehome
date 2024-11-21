@@ -11,7 +11,6 @@ http_archive(
 # googletest library
 http_archive(
     name = "com_google_googletest",
-    sha256 = "sha256-e0K01u1IgQxTYsJloX+uvpDcI3PIheUhZDnTeSfwKSY=",  # Verify the integrity of the downloaded file
     strip_prefix = "googletest-1.15.2",
     urls = ["https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz"],
 )
