@@ -1,2 +1,7 @@
 #!/bin/bash
-docker build -t gemini_interview . && docker run -i --rm gemini_interview /app/build/match_engine
+
+# Build the Docker image
+docker build -t engine-takehome:latest -f ./deploy/Dockerfile . --progress=plain
+
+# Run the Docker container
+docker run -i engine-takehome:latest
