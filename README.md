@@ -127,6 +127,10 @@ Bazel is used to build and run the application. Install bazel using brew
 brew install bazel
 ```
 
+### Docker
+
+Docker is used to build and run the application.
+
 
 ## Run the application
 
