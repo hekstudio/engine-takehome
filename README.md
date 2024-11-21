@@ -139,5 +139,29 @@ bazel run main -- --start
 run the following command to start the module test.
 
 ```bash
-bazel test test_order
+bazel test test_order --test_output=all
+bazel test test_order_book --test_output=all
 ```
+
+
+## Architecture
+
+### Key Components
+
+- Order
+  - Represents an order with OrderID, Side, Instrument, Quantity and Price
+  - Expandable to include more fields like order status, filled quantity, timestamp, time in force etc.
+
+- OrderBook
+  - Represents an order book with buy and sell orders for a particular instrument
+  - Supported operations:
+    - add new order to the OrderBook
+    - cancel an order from the OrderBook
+    - modify an order in the OrderBook (only pending/working orders can be modified)
+    - matching orders in the OrderBook
+
+- MatchEngine
+  - Represents a match engine that matches orders in the order book
+  - Supported operations:
+    - Create new Orderbook: Create an order book for a particular instrument
+    - Add Order: Add an order to the Orderbook
