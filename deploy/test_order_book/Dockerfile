@@ -1,36 +1,17 @@
-# Stage 1: Build Stage
-# NOTE: currently bazel image does not support darwin/arm64
-FROM --platform=$BUILDPLATFORM l.gcr.io/google/bazel:latest AS build-stage
+# Use a base image with Bazel installed
+FROM l.gcr.io/google/bazel:latest
 
 # Set the working directory
 WORKDIR /app
 
-# Print build information
-# Print the Bazel version
-RUN bazel version
+# Copy the project files into the container
+COPY . .
 
-# Copy project files
-COPY .. .
+# Install any necessary dependencies (if required)
+# RUN apt-get update && apt-get install -y <dependencies>
 
-# Build the executable using Bazel
-RUN bazel build \
-    --verbose_failures \
-    --sandbox_debug \
-    --cxxopt='-std=c++17' \
-    --host_cxxopt='-std=c++17' \
-    --cxxopt='-stdlib=libc++' \
-    --linkopt='-stdlib=libc++' \
-    --cxxopt='-I/usr/include/c++/11' \
-    --cxxopt='-I/usr/include' \
-    //:test_order_book
+# Build the project and run the test
+RUN bazel test //:test_order_book --test_output=all
 
-# Stage 2: Runtime Stage
-FROM --platform=$BUILDPLATFORM debian:bullseye AS runtime-stage
-
-# Copy the executables from the build stage
-COPY --from=build-stage /app/bazel-bin/main /usr/local/bin/main
-
-# Set the entrypoint to the executable
-ENTRYPOINT ["/usr/local/bin/main"]
-
-# Set flags
+# Set the entrypoint to run the test
+ENTRYPOINT ["bazel", "test", "//:test-order", "--test_output=all"]
